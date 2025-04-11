@@ -21,7 +21,7 @@ const OrderCreate = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/product');
+        const response = await axios.get('http://localhost:8080/api/product');
         setProducts(response.data);
       } catch (err) {
         setError('Failed to load products');
@@ -44,7 +44,7 @@ const OrderCreate = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:3000/order',
+        'http://localhost:8080/api/order',
         { products: selectedProducts },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -58,14 +58,14 @@ const OrderCreate = () => {
     <Container maxWidth="sm">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          Create Order
+          Mua hàng
         </Typography>
         <form onSubmit={handleSubmit}>
           {selectedProducts.map((item, index) => (
             <Box key={index} mb={2}>
               <TextField
                 select
-                label="Product"
+                label="Sản phẩm"
                 fullWidth
                 value={item.product}
                 onChange={(e) => handleProductChange(index, 'product', e.target.value)}
@@ -77,7 +77,7 @@ const OrderCreate = () => {
                 ))}
               </TextField>
               <TextField
-                label="Quantity"
+                label="Số lượng"
                 type="number"
                 fullWidth
                 margin="normal"
@@ -89,7 +89,7 @@ const OrderCreate = () => {
             </Box>
           ))}
           <Button variant="outlined" onClick={handleAddProduct} sx={{ mb: 2 }}>
-            Add Another Product
+            Thêm đơn mua khác!
           </Button>
           {error && (
             <Typography color="error" align="center">
@@ -98,7 +98,7 @@ const OrderCreate = () => {
           )}
           <Box mt={2}>
             <Button type="submit" variant="contained" fullWidth>
-              Create Order
+              Tạo đơn
             </Button>
           </Box>
         </form>

@@ -16,32 +16,37 @@ const Navbar = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          E-Commerce
+          TNBH_Store
         </Typography>
         <Button color="inherit" component={Link} to="/">
-          Products
+          Sản Phẩm
         </Button>
         {user ? (
           <>
             {user.seller && (
-              <Button color="inherit" component={Link} to="/products/manage">
-                Manage Products
-              </Button>
+              <>
+                <Button color="inherit" component={Link} to="/products/manage">
+                  Quản lý SP
+                </Button>
+                <Button color="inherit" component={Link} to="/seller-orders">
+                  Đơn đặt hàng
+                </Button>
+              </>
             )}
             <Button color="inherit" component={Link} to="/orders">
-              Orders
+              Mua hàng
             </Button>
             <Button color="inherit" onClick={handleLogout}>
-              Logout
+              Đăng xuất
             </Button>
           </>
         ) : (
           <>
             <Button color="inherit" component={Link} to="/login">
-              Login
+              Đăng nhập
             </Button>
             <Button color="inherit" component={Link} to="/register">
-              Register
+              Đăng kí
             </Button>
           </>
         )}

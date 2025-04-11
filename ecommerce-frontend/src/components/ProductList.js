@@ -10,7 +10,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/product');
+        const response = await axios.get('http://localhost:8080/api/product');
         setProducts(response.data);
       } catch (err) {
         setError('Failed to load products');
@@ -23,7 +23,7 @@ const ProductList = () => {
     <Container maxWidth="lg">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          Products
+          Sản phẩm
         </Typography>
         {error && (
           <Typography color="error" align="center">
@@ -54,7 +54,7 @@ const ProductList = () => {
                     to={`/product/${product._id}`}
                     fullWidth
                   >
-                    View Details
+                    Xem thông tin
                   </Button>
                 </CardContent>
               </Card>

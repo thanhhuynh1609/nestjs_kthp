@@ -11,7 +11,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/product/${id}`);
+        const response = await axios.get(`http://localhost:8080/api/product/${id}`);
         setProduct(response.data);
       } catch (err) {
         setError('Failed to load product');
@@ -39,11 +39,11 @@ const ProductDetail = () => {
               ${product.price}
             </Typography>
             <Typography color="textSecondary">
-              Seller: {product.owner?.username || 'Unknown'}
+              Người bán: {product.owner?.username || 'Unknown'}
             </Typography>
             <Box mt={2}>
               <Button variant="contained" fullWidth>
-                Add to Cart
+                Thêm vào giỏ hàng
               </Button>
             </Box>
           </CardContent>

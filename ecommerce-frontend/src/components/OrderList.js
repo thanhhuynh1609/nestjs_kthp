@@ -12,7 +12,7 @@ const OrderList = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/order', {
+        const response = await axios.get('http://localhost:8080/api/order', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(response.data);
@@ -27,7 +27,7 @@ const OrderList = () => {
     <Container maxWidth="md">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          My Orders
+          Đơn đặt hàng của tôi
         </Typography>
         <Button
           variant="contained"
@@ -35,7 +35,7 @@ const OrderList = () => {
           to="/orders/create"
           sx={{ mb: 2 }}
         >
-          Create Order
+          Mua hàng
         </Button>
         {error && (
           <Typography color="error" align="center">
@@ -46,18 +46,18 @@ const OrderList = () => {
           {orders.map((order) => (
             <ListItem key={order._id} divider>
               <ListItemText
-                primary={`Order Total: $${order.totalPrice}`}
+                primary={`Tổng tiền: $${order.totalPrice}`}
                 secondary={
                   <>
                     <Typography>
-                      Products:
+                      Sản phẩm:
                       {order.products.map((p) => (
                         <div key={p.product._id}>
-                          {p.product.title} (Qty: {p.quantity})
+                          {p.product.title} (SL: {p.quantity})
                         </div>
                       ))}
                     </Typography>
-                    <Typography>Created: {new Date(order.created).toLocaleDateString()}</Typography>
+                    <Typography>Ngày mua: {new Date(order.created).toLocaleDateString()}</Typography>
                   </>
                 }
               />

@@ -14,7 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
         username,
         password,
       });
@@ -29,18 +29,18 @@ const Login = () => {
     <Container maxWidth="sm">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          Login
+          Đăng nhập
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Username"
+            label="Tên đăng nhập"
             fullWidth
             margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            label="Password"
+            label="Mật Khẩu"
             type="password"
             fullWidth
             margin="normal"
@@ -54,7 +54,7 @@ const Login = () => {
           )}
           <Box mt={2}>
             <Button type="submit" variant="contained" fullWidth>
-              Login
+              Đăng nhập
             </Button>
           </Box>
         </form>

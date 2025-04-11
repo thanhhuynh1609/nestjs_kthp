@@ -43,4 +43,23 @@ export class OrderService {
       .populate('products.product');
     return order;
   }
+
+  async listOrdersForSeller(sellerId: string) {
+    // Tìm tất cả đơn hàng có sản phẩm thuộc về người bán
+    const orders = await this.orderModel
+      .find()
+      .populate('owner')
+      .populate('products.product');
+
+    // Lọc các đơn hàng có sản phẩm thuộc về người bán
+    const sellerOrders = orders.filter((order) =>
+      order.products.some((item) => item.product.owner.toString() === sellerId),
+    );
+
+    if (!sellerOrders || sellerOrders.length === 0) {
+      throw new HttpException('No Orders Found for Seller', HttpStatus.NO_CONTENT);
+    }
+
+    return sellerOrders;
+  }
 }

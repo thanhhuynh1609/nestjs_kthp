@@ -9,6 +9,7 @@ import ProductDetail from './components/ProductDetail';
 import ProductManage from './components/ProductManage';
 import OrderList from './components/OrderList';
 import OrderCreate from './components/OrderCreate';
+import SellerOrders from './components/SellerOrders';
 
 const App = () => {
   return (
@@ -23,6 +24,8 @@ const App = () => {
           <Route path="/products/manage" element={<ProductManage />} />
           <Route path="/orders" element={<OrderList />} />
           <Route path="/orders/create" element={<OrderCreate />} />
+          <Route path="/seller-orders" element={<SellerOrders />} /> {/* Thêm route */}
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </Router>
     </AuthProvider>

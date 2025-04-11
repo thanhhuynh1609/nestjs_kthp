@@ -31,18 +31,18 @@ const Register = () => {
     <Container maxWidth="sm">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          Register
+          Đăng kí
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Username"
+            label="Tên đăng nhập"
             fullWidth
             margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            label="Password"
+            label="Mật khẩu"
             type="password"
             fullWidth
             margin="normal"
@@ -56,7 +56,7 @@ const Register = () => {
                 onChange={(e) => setSeller(e.target.checked)}
               />
             }
-            label="Register as Seller"
+            label="Đăng kí với tư cách người bán"
           />
           {error && (
             <Typography color="error" align="center">
@@ -65,7 +65,7 @@ const Register = () => {
           )}
           <Box mt={2}>
             <Button type="submit" variant="contained" fullWidth>
-              Register
+              Đăng kí
             </Button>
           </Box>
         </form>

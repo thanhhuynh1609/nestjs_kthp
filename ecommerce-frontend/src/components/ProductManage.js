@@ -28,7 +28,7 @@ const ProductManage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/product/mine', {
+        const response = await axios.get('http://localhost:8080/api/product/mine', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProducts(response.data);
@@ -64,18 +64,18 @@ const ProductManage = () => {
     try {
       if (editId) {
         await axios.put(
-          `http://localhost:3000/product/${editId}`,
+          `http://localhost:8080/api/product/${editId}`,
           { ...form, price: parseFloat(form.price) },
           { headers: { Authorization: `Bearer ${token}` } },
         );
       } else {
         await axios.post(
-          'http://localhost:3000/product',
+          'http://localhost:8080/api/product',
           { ...form, price: parseFloat(form.price) },
           { headers: { Authorization: `Bearer ${token}` } },
         );
       }
-      const response = await axios.get('http://localhost:3000/product/mine', {
+      const response = await axios.get('http://localhost:8080/api/product/mine', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
@@ -87,7 +87,7 @@ const ProductManage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/product/${id}`, {
+      await axios.delete(`http://localhost:8080/api/product/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(products.filter((p) => p._id !== id));
@@ -100,10 +100,10 @@ const ProductManage = () => {
     <Container maxWidth="lg">
       <Box mt={5}>
         <Typography variant="h4" align="center">
-          Manage Products
+          Quản lý sản phẩm
         </Typography>
         <Button variant="contained" onClick={() => handleOpen()} sx={{ mb: 2 }}>
-          Add Product
+          Thêm sản phẩm
         </Button>
         {error && (
           <Typography color="error" align="center">
@@ -135,14 +135,14 @@ const ProductManage = () => {
                       onClick={() => handleOpen(product)}
                       sx={{ mr: 1 }}
                     >
-                      Edit
+                      Sửa
                     </Button>
                     <Button
                       variant="contained"
                       color="error"
                       onClick={() => handleDelete(product._id)}
                     >
-                      Delete
+                      Xóa
                     </Button>
                   </Box>
                 </CardContent>
@@ -151,24 +151,24 @@ const ProductManage = () => {
           ))}
         </Grid>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{editId ? 'Edit Product' : 'Add Product'}</DialogTitle>
+          <DialogTitle>{editId ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}</DialogTitle>
           <DialogContent>
             <TextField
-              label="Title"
+              label="Tên"
               fullWidth
               margin="normal"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
             <TextField
-              label="Description"
+              label="Thông tin"
               fullWidth
               margin="normal"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
             <TextField
-              label="Price"
+              label="Giá"
               type="number"
               fullWidth
               margin="normal"
@@ -176,7 +176,7 @@ const ProductManage = () => {
               onChange={(e) => setForm({ ...form, price: e.target.value })}
             />
             <TextField
-              label="Image URL"
+              label="Link ảnh"
               fullWidth
               margin="normal"
               value={form.image}
@@ -184,9 +184,9 @@ const ProductManage = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>Thoát</Button>
             <Button onClick={handleSubmit} variant="contained">
-              Save
+              Lưu
             </Button>
           </DialogActions>
         </Dialog>
