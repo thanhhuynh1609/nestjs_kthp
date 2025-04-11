@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Product } from '../types/product';
 import { User } from '../types/user';
@@ -15,7 +15,8 @@ export class ProductService {
   }
 
   async findByOwner(userId: string): Promise<Product[]> {
-    return await this.productModel.find({ owner: userId }).populate('owner');
+    const objectId = new Types.ObjectId(userId);
+    return await this.productModel.find({ owner: objectId }).populate('owner');
   }
 
   async findById(id: string): Promise<Product> {
@@ -27,12 +28,12 @@ export class ProductService {
   }
 
   async create(productDTO: CreateProductDTO, user: User): Promise<Product> {
-    const product = await this.productModel.create({
+    const createdProduct = new this.productModel({
       ...productDTO,
-      owner: user,
+      owner: user._id, // Lưu đúng ObjectId
     });
-    await product.save();
-    return product.populate('owner');
+    await createdProduct.save();
+    return createdProduct.populate('owner');
   }
 
   async update(
@@ -41,25 +42,35 @@ export class ProductService {
     userId: string,
   ): Promise<Product> {
     const product = await this.productModel.findById(id);
-    if (userId !== product.owner.toString()) {
+    if (!product) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (product.owner.toString() !== userId) {
       throw new HttpException(
         'You do not own this product',
         HttpStatus.UNAUTHORIZED,
       );
     }
-    await product.update(productDTO);
+
+    await product.updateOne(productDTO);
     return await this.productModel.findById(id).populate('owner');
   }
 
   async delete(id: string, userId: string): Promise<Product> {
     const product = await this.productModel.findById(id);
-    if (userId !== product.owner.toString()) {
+    if (!product) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (product.owner.toString() !== userId) {
       throw new HttpException(
         'You do not own this product',
         HttpStatus.UNAUTHORIZED,
       );
     }
-    await product.remove();
+
+    await product.deleteOne();
     return product.populate('owner');
   }
 }

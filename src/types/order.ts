@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 import { User } from './user';
 import { Product } from './product';
@@ -9,7 +9,7 @@ interface ProductOrder {
 }
 
 export interface Order extends Document {
-  owner: User;
+  owner: Types.ObjectId | User;
   totalPrice: Number;
   products: ProductOrder[];
   created: Date;

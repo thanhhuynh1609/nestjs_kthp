@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
 
 import { LoginDTO, RegisterDTO } from '../auth/auth.dto';
@@ -49,9 +49,7 @@ export class UserService {
   }
 
   sanitizeUser(user: User) {
-    const sanitized = user.toObject();
-    delete sanitized['password'];
-    return sanitized;
-    // return user.depopulate('password');
+    const { password, ...userWithoutPassword } = user.toObject();
+    return userWithoutPassword;
   }
 }
