@@ -33,6 +33,9 @@ const Navbar = () => {
                 </Button>
               </>
             )}
+            <Button color="inherit" component={Link} to="/profile">
+              Hồ sơ
+            </Button>
             <Button color="inherit" component={Link} to="/orders">
               Mua hàng
             </Button>

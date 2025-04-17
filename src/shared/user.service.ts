@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
 
-import { LoginDTO, RegisterDTO } from '../auth/auth.dto';
+import { LoginDTO, RegisterDTO, UpdateUserDTO } from '../auth/auth.dto';
 import { Payload } from '../types/payload';
 import { User } from '../types/user';
 
@@ -51,5 +51,19 @@ export class UserService {
   sanitizeUser(user: User) {
     const { password, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
+  }
+
+  async update(userId: string, userDTO: UpdateUserDTO): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  
+    if (userDTO.password) {
+      userDTO.password = await bcrypt.hash(userDTO.password, 10);
+    }
+  
+    await user.updateOne(userDTO);
+    return await this.userModel.findById(userId).select('-password');
   }
 }

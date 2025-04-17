@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { UserModule } from './shared/user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { OrderModule } from './order/order.module';
     AuthModule,
     ProductModule,
     OrderModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

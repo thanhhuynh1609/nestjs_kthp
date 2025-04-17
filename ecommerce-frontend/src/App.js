@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Profiler } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -10,6 +10,7 @@ import ProductManage from './components/ProductManage';
 import OrderList from './components/OrderList';
 import OrderCreate from './components/OrderCreate';
 import SellerOrders from './components/SellerOrders';
+import Profile from './components/Profile';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/orders/create" element={<OrderCreate />} />
           <Route path="/seller-orders" element={<SellerOrders />} /> {/* Thêm route */}
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+          <Route path="/profile" element={<Profile/>} />
         </Routes>
       </Router>
     </AuthProvider>

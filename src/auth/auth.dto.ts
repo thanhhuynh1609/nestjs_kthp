@@ -11,3 +11,9 @@ export interface RegisterDTO {
   seller?: boolean;
   address?: Address;
 }
+
+export interface UpdateUserDTO {
+  password?: string;
+  seller?: boolean;
+  address?: Address;
+}
