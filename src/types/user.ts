@@ -13,6 +13,7 @@ export interface User extends Document {
   username: string;
   readonly password: string;
   seller: boolean;
+  admin: boolean;
   address: Address;
   created: Date;
 }

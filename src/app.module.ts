@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './shared/user.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UserModule } from './shared/user.module';
     ProductModule,
     OrderModule,
     UserModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

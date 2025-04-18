@@ -18,9 +18,19 @@ export class AuthController {
     const payload: Payload = {
       username: user.username,
       seller: user.seller,
+      admin: user.admin
     };
     const token = await this.authService.signPayload(payload);
-    return { user, token };
+  return { 
+    user: {
+      _id: user._id,
+      username: user.username,
+      seller: user.seller,
+      admin: user.admin, // Đảm bảo có trường này
+      created: user.created
+    },
+    token 
+  };
   }
 
   @Post('register')
@@ -29,6 +39,7 @@ export class AuthController {
     const payload: Payload = {
       username: user.username,
       seller: user.seller,
+      admin: user.admin,
     };
     const token = await this.authService.signPayload(payload);
     return { user, token };

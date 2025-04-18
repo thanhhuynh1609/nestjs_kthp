@@ -73,4 +73,12 @@ export class ProductService {
     await product.deleteOne();
     return product.populate('owner');
   }
+
+  async deleteByAdmin(id: string): Promise<Product> {
+    const product = await this.productModel.findByIdAndDelete(id);
+    if (!product) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+    return product;
+  }
 }

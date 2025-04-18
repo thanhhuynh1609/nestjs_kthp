@@ -11,6 +11,10 @@ export const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  admin: {  // Thêm trường admin kiểu boolean
+    type: Boolean,
+    default: false,
+  },
   address: {
     addr1: String,
     addr2: String,

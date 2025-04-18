@@ -10,6 +10,7 @@ export interface RegisterDTO {
   password: string;
   seller?: boolean;
   address?: Address;
+  admin?: boolean; 
 }
 
 export interface UpdateUserDTO {

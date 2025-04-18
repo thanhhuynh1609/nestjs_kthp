@@ -31,7 +31,7 @@ export class UserService {
     const { username, password } = userDTO;
     const user = await this.userModel
       .findOne({ username })
-      .select('username password seller created address');
+      .select('username password seller created address admin');
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
@@ -66,4 +66,14 @@ export class UserService {
     await user.updateOne(userDTO);
     return await this.userModel.findById(userId).select('-password');
   }
+
+  async findAll() {
+    return await this.userModel.find().select('-password');
+  }
+
+  async delete(id: string) {
+    return await this.userModel.findByIdAndDelete(id);
+  }
+
+  
 }

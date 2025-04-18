@@ -62,4 +62,18 @@ export class OrderService {
 
     return sellerOrders;
   }
+
+  async listAllOrders() {
+    return await this.orderModel.find()
+      .populate('owner')
+      .populate('products.product');
+  }
+
+  async deleteByAdmin(id: string) {
+    const order = await this.orderModel.findByIdAndDelete(id);
+    if (!order) {
+      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    }
+    return order;
+  }
 }

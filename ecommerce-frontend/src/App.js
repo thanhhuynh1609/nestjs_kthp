@@ -11,6 +11,10 @@ import OrderList from './components/OrderList';
 import OrderCreate from './components/OrderCreate';
 import SellerOrders from './components/SellerOrders';
 import Profile from './components/Profile';
+import AdminDashboard from './components/AdminDashboard';
+import AdminUsers from './components/AdminUsers';
+import AdminOrders from './components/AdminOrders';
+import AdminProducts from './components/AdminProducts';
 
 const App = () => {
   return (
@@ -27,7 +31,12 @@ const App = () => {
           <Route path="/orders/create" element={<OrderCreate />} />
           <Route path="/seller-orders" element={<SellerOrders />} /> {/* Thêm route */}
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
-          <Route path="/profile" element={<Profile/>} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </Router>
     </AuthProvider>

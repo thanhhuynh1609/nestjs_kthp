@@ -1,3 +1,4 @@
+// components/Navbar.js
 import React, { useContext } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,6 +24,11 @@ const Navbar = () => {
         </Button>
         {user ? (
           <>
+            {user.admin && (
+              <Button color="inherit" component={Link} to="/admin">
+                Quản trị
+              </Button>
+            )}
             {user.seller && (
               <>
                 <Button color="inherit" component={Link} to="/products/manage">

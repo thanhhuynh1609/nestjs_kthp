@@ -1,3 +1,4 @@
+// components/Login.js
 import React, { useState, useContext } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 import axios from 'axios';
@@ -18,9 +19,31 @@ const Login = () => {
         username,
         password,
       });
-      login(response.data.user, response.data.token);
-      navigate('/');
+      
+      console.log('RAW API RESPONSE:', response.data); // Thêm dòng này để debug
+      
+      // Đảm bảo cấu trúc user object
+      const userData = {
+        _id: response.data.user._id,
+        username: response.data.user.username,
+        seller: response.data.user.seller || false,
+        admin: response.data.user.admin, // Thêm dòng này
+        created: response.data.user.created
+      };
+      
+      console.log('PROCESSED USER DATA:', userData); // Debug
+      
+      login(userData, response.data.token);
+      
+      if (userData.admin) {
+        console.log('REDIRECTING TO ADMIN');
+        navigate('/admin', { replace: true }); // Thêm replace: true
+      } else {
+        console.log('REDIRECTING TO HOME');
+        navigate('/', { replace: true });
+      }
     } catch (err) {
+      console.error('LOGIN ERROR DETAILS:', err.response);
       setError(err.response?.data?.message || 'Login failed');
     }
   };
