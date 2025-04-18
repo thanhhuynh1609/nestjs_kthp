@@ -6,7 +6,10 @@ import {
   TextField,
   Button,
   MenuItem,
+  Paper,
+  IconButton
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -24,7 +27,7 @@ const OrderCreate = () => {
         const response = await axios.get('http://localhost:8080/api/product');
         setProducts(response.data);
       } catch (err) {
-        setError('Failed to load products');
+        setError('Không thể tải danh sách sản phẩm');
       }
     };
     fetchProducts();
@@ -50,58 +53,79 @@ const OrderCreate = () => {
       );
       navigate('/orders');
     } catch (err) {
-      setError('Failed to create order');
+      setError('Tạo đơn hàng thất bại');
     }
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box mt={5}>
-        <Typography variant="h4" align="center">
-          Mua hàng
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          {selectedProducts.map((item, index) => (
-            <Box key={index} mb={2}>
-              <TextField
-                select
-                label="Sản phẩm"
-                fullWidth
-                value={item.product}
-                onChange={(e) => handleProductChange(index, 'product', e.target.value)}
+    <Container maxWidth="md">
+      <Box mt={8} display="flex" justifyContent="center">
+        <Paper elevation={4} sx={{ p: 4, borderRadius: 3, width: '100%' }}>
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            Tạo đơn hàng
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            {selectedProducts.map((item, index) => (
+              <Box
+                key={index}
+                mb={3}
+                p={2}
+                border="1px solid #ddd"
+                borderRadius={2}
               >
-                {products.map((p) => (
-                  <MenuItem key={p._id} value={p._id}>
-                    {p.title}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                label="Số lượng"
-                type="number"
-                fullWidth
-                margin="normal"
-                value={item.quantity}
-                onChange={(e) =>
-                  handleProductChange(index, 'quantity', parseInt(e.target.value))
-                }
-              />
+                <TextField
+                  select
+                  label="Sản phẩm"
+                  fullWidth
+                  value={item.product}
+                  onChange={(e) =>
+                    handleProductChange(index, 'product', e.target.value)
+                  }
+                >
+                  {products.map((p) => (
+                    <MenuItem key={p._id} value={p._id}>
+                      {p.title}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <TextField
+                  label="Số lượng"
+                  type="number"
+                  fullWidth
+                  margin="normal"
+                  value={item.quantity}
+                  onChange={(e) =>
+                    handleProductChange(index, 'quantity', Math.max(1, parseInt(e.target.value) || 1))
+                  }
+                />
+              </Box>
+            ))}
+
+            <Box display="flex" justifyContent="center" mb={2}>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={handleAddProduct}
+              >
+                Thêm đơn mua khác
+              </Button>
             </Box>
-          ))}
-          <Button variant="outlined" onClick={handleAddProduct} sx={{ mb: 2 }}>
-            Thêm đơn mua khác!
-          </Button>
-          {error && (
-            <Typography color="error" align="center">
-              {error}
-            </Typography>
-          )}
-          <Box mt={2}>
-            <Button type="submit" variant="contained" fullWidth>
-              Tạo đơn
-            </Button>
-          </Box>
-        </form>
+
+            {error && (
+              <Typography color="error" align="center">
+                {error}
+              </Typography>
+            )}
+
+            <Box mt={2}>
+              <Button type="submit" variant="contained" fullWidth size="large">
+                Tạo đơn
+              </Button>
+            </Box>
+          </form>
+        </Paper>
       </Box>
     </Container>
   );

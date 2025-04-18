@@ -1,6 +1,12 @@
-// components/Login.js
 import React, { useState, useContext } from 'react';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Paper,
+} from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -19,68 +25,65 @@ const Login = () => {
         username,
         password,
       });
-      
-      console.log('RAW API RESPONSE:', response.data); // Thêm dòng này để debug
-      
-      // Đảm bảo cấu trúc user object
+
       const userData = {
         _id: response.data.user._id,
         username: response.data.user.username,
         seller: response.data.user.seller || false,
-        admin: response.data.user.admin, // Thêm dòng này
-        created: response.data.user.created
+        admin: response.data.user.admin,
+        created: response.data.user.created,
       };
-      
-      console.log('PROCESSED USER DATA:', userData); // Debug
-      
+
       login(userData, response.data.token);
-      
+
       if (userData.admin) {
-        console.log('REDIRECTING TO ADMIN');
-        navigate('/admin', { replace: true }); // Thêm replace: true
+        navigate('/admin', { replace: true });
       } else {
-        console.log('REDIRECTING TO HOME');
         navigate('/', { replace: true });
       }
     } catch (err) {
-      console.error('LOGIN ERROR DETAILS:', err.response);
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || 'Đăng nhập thất bại');
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Box mt={5}>
-        <Typography variant="h4" align="center">
-          Đăng nhập
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Tên đăng nhập"
-            fullWidth
-            margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Mật Khẩu"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && (
-            <Typography color="error" align="center">
-              {error}
-            </Typography>
-          )}
-          <Box mt={2}>
-            <Button type="submit" variant="contained" fullWidth>
-              Đăng nhập
-            </Button>
-          </Box>
-        </form>
+      <Box mt={10} display="flex" justifyContent="center">
+        <Paper elevation={4} sx={{ padding: 4, borderRadius: 3, width: '100%' }}>
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            Đăng nhập
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Tên đăng nhập"
+              fullWidth
+              margin="normal"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              label="Mật khẩu"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {error && (
+              <Typography color="error" align="center" mt={1}>
+                {error}
+              </Typography>
+            )}
+
+            <Box mt={3}>
+              <Button type="submit" variant="contained" fullWidth size="large">
+                Đăng nhập
+              </Button>
+            </Box>
+          </form>
+        </Paper>
       </Box>
     </Container>
   );

@@ -1,5 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import {
+  Container,
+  Typography,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Avatar,
+  Stack,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
@@ -27,7 +42,7 @@ const AdminProducts = () => {
       await axios.delete(`http://localhost:8080/api/admin/products/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setProducts(products.filter(product => product._id !== productId));
+      setProducts(products.filter((product) => product._id !== productId));
     } catch (err) {
       setError('Xóa sản phẩm thất bại');
     }
@@ -36,34 +51,45 @@ const AdminProducts = () => {
   return (
     <Container maxWidth="lg">
       <Box mt={5}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h4" align="center" gutterBottom fontWeight="bold">
           Quản lý Sản phẩm
         </Typography>
 
         {error && (
-          <Typography color="error" align="center">{error}</Typography>
+          <Typography color="error" align="center" mb={2}>
+            {error}
+          </Typography>
         )}
 
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
               <TableRow>
+                <TableCell>Ảnh</TableCell>
                 <TableCell>Tên</TableCell>
                 <TableCell>Giá</TableCell>
                 <TableCell>Mô tả</TableCell>
-                <TableCell>Hành động</TableCell>
+                <TableCell align="center">Hành động</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product._id}>
-                  <TableCell>{product.title}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.description}</TableCell>
+                <TableRow key={product._id} hover>
                   <TableCell>
-                    <Button 
-                      variant="outlined" 
+                    <Avatar
+                      src={product.image || 'https://via.placeholder.com/40'}
+                      variant="rounded"
+                      sx={{ width: 56, height: 56 }}
+                    />
+                  </TableCell>
+                  <TableCell>{product.title}</TableCell>
+                  <TableCell>{product.price.toLocaleString('vi-VN')}₫</TableCell>
+                  <TableCell sx={{ maxWidth: 250 }}>{product.description}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="outlined"
                       color="error"
+                      startIcon={<DeleteIcon />}
                       onClick={() => handleDelete(product._id)}
                     >
                       Xóa

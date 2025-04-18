@@ -1,5 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { TextField, Button, Container, Typography, Box, Checkbox, FormControlLabel } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Paper
+} from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -23,52 +32,58 @@ const Register = () => {
       login(response.data.user, response.data.token);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Đăng ký thất bại');
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Box mt={5}>
-        <Typography variant="h4" align="center">
-          Đăng kí
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Tên đăng nhập"
-            fullWidth
-            margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Mật khẩu"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={seller}
-                onChange={(e) => setSeller(e.target.checked)}
-              />
-            }
-            label="Đăng kí với tư cách người bán"
-          />
-          {error && (
-            <Typography color="error" align="center">
-              {error}
-            </Typography>
-          )}
-          <Box mt={2}>
-            <Button type="submit" variant="contained" fullWidth>
-              Đăng kí
-            </Button>
-          </Box>
-        </form>
+      <Box mt={10} display="flex" justifyContent="center">
+        <Paper elevation={4} sx={{ padding: 4, borderRadius: 3, width: '100%' }}>
+          <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+            Đăng ký
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Tên đăng nhập"
+              fullWidth
+              margin="normal"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              label="Mật khẩu"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={seller}
+                  onChange={(e) => setSeller(e.target.checked)}
+                />
+              }
+              label="Đăng ký với tư cách người bán"
+              sx={{ mt: 1 }}
+            />
+
+            {error && (
+              <Typography color="error" align="center" mt={2}>
+                {error}
+              </Typography>
+            )}
+
+            <Box mt={3}>
+              <Button type="submit" variant="contained" fullWidth size="large">
+                Đăng ký
+              </Button>
+            </Box>
+          </form>
+        </Paper>
       </Box>
     </Container>
   );

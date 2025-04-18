@@ -43,7 +43,7 @@ const ProductList = () => {
           {products.map((product) => (
             <Grid item xs={12} sm={6} md={3} key={product._id}>
               <Card sx={{ 
-                width:'300px',
+                width:'250px',
                 height: '100%', 
                 display: 'flex', 
                 flexDirection: 'column',

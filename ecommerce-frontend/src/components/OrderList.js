@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Typography, Box, List, ListItem, ListItemText, Button } from '@mui/material'; // Thêm Button
+import {
+  Container,
+  Typography,
+  Box,
+  Paper,
+  Button,
+  Stack,
+  Divider,
+  Grid,
+  Avatar,
+} from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -17,53 +27,113 @@ const OrderList = () => {
         });
         setOrders(response.data);
       } catch (err) {
-        setError('Failed to load orders');
+        setError('Không thể tải danh sách đơn hàng');
       }
     };
     fetchOrders();
   }, [token]);
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('vi-VN');
+  };
+
+  const handleDeleteOrder = (orderId) => {
+    // Call API to delete the order here
+    console.log(`Delete order with ID: ${orderId}`);
+  };
+
+  const handleViewOrder = (orderId) => {
+    // Navigate to order detail page or open modal
+    console.log(`View order with ID: ${orderId}`);
+  };
+
   return (
     <Container maxWidth="md">
-      <Box mt={5}>
-        <Typography variant="h4" align="center">
-          Đơn đặt hàng của tôi
+      <Box mt={6}>
+        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+          Đơn hàng của tôi
         </Typography>
-        <Button
-          variant="contained"
-          component={Link}
-          to="/orders/create"
-          sx={{ mb: 2 }}
-        >
-          Mua hàng
-        </Button>
+
+        <Stack direction="row" justifyContent="flex-end" mb={3}>
+          <Button
+            variant="contained"
+            component={Link}
+            to="/orders/create"
+          >
+            Tạo đơn hàng mới
+          </Button>
+        </Stack>
+
         {error && (
           <Typography color="error" align="center">
             {error}
           </Typography>
         )}
-        <List>
+
+        <Stack spacing={3}>
           {orders.map((order) => (
-            <ListItem key={order._id} divider>
-              <ListItemText
-                primary={`Tổng tiền: $${order.totalPrice}`}
-                secondary={
-                  <>
-                    <Typography>
-                      Sản phẩm:
-                      {order.products.map((p) => (
-                        <div key={p.product._id}>
-                          {p.product.title} (SL: {p.quantity})
-                        </div>
-                      ))}
-                    </Typography>
-                    <Typography>Ngày mua: {new Date(order.created).toLocaleDateString()}</Typography>
-                  </>
-                }
-              />
-            </ListItem>
+            <Paper key={order._id} elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Tổng tiền: ${order.totalPrice}
+              </Typography>
+
+              <Typography variant="subtitle1" fontWeight="medium">
+                Danh sách sản phẩm:
+              </Typography>
+
+              <Box ml={2} mb={1}>
+                {order.products.map((p) => (
+                  <Grid container spacing={2} key={p.product._id} alignItems="center">
+                    {/* Ảnh sản phẩm và thông tin bên trái */}
+                    <Grid item xs={8} container alignItems="center">
+                      <Grid item xs={3}>
+                        <Avatar 
+                          variant="square" 
+                          src={p.product.imageUrl} 
+                          sx={{ width: 80, height: 80, objectFit: 'cover' }} 
+                        />
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography>
+                          <strong>{p.product.title}</strong>
+                        </Typography>
+                        <Typography>Số lượng: {p.quantity}</Typography>
+                      </Grid>
+                    </Grid>
+
+                    {/* Nút Xem và Xóa nằm sát phải */}
+                    <Grid item xs={4} container justifyContent="flex-end">
+                      <Stack direction="row" spacing={2}>
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleViewOrder(order._id)}
+                          sx={{ width: '48%' }}
+                        >
+                          Xem
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleDeleteOrder(order._id)}
+                          sx={{ width: '48%' }}
+                        >
+                          Xóa
+                        </Button>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                ))}
+              </Box>
+
+              <Divider sx={{ my: 1 }} />
+
+              <Typography variant="body2" color="text.secondary">
+                Ngày mua: {formatDate(order.created)}
+              </Typography>
+            </Paper>
           ))}
-        </List>
+        </Stack>
       </Box>
     </Container>
   );
