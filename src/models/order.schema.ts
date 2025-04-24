@@ -1,3 +1,4 @@
+
 import * as mongoose from 'mongoose';
 
 export const OrderSchema = new mongoose.Schema({
@@ -24,5 +25,10 @@ export const OrderSchema = new mongoose.Schema({
   created: {
     type: Date,
     default: Date.now,
+  },
+  trangThai: {
+    type: String,
+    enum: ['Chờ xử lý', 'Đang giao hàng', 'Đã giao', 'Đã hủy'],
+    default: 'Chờ xử lý',
   },
 });

@@ -9,6 +9,10 @@ import {
   Grid,
   Divider,
   Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
@@ -24,7 +28,6 @@ const SellerOrders = () => {
         const response = await axios.get('http://localhost:8080/api/order/seller-orders', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log('Seller Orders Data:', response.data); // Debug dữ liệu
         setOrders(response.data);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load seller orders');
@@ -32,6 +35,23 @@ const SellerOrders = () => {
     };
     fetchSellerOrders();
   }, [token]);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8080/api/order/seller-orders/${orderId}/status`,
+        { trangThai: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === orderId ? { ...order, trangThai: response.data.trangThai } : order
+        )
+      );
+    } catch (err) {
+      setError('Cập nhật trạng thái thất bại: ' + (err.message || 'Lỗi không xác định'));
+    }
+  };
 
   return (
     <Container maxWidth="lg">
@@ -46,7 +66,7 @@ const SellerOrders = () => {
         )}
         {orders.length === 0 ? (
           <Typography align="center" color="textSecondary">
-            Không tìm thấythấy
+            Không tìm thấy đơn hàng nào
           </Typography>
         ) : (
           <Grid container spacing={3}>
@@ -54,10 +74,9 @@ const SellerOrders = () => {
               <Grid item xs={12} key={order._id}>
                 <Card elevation={3} sx={{ borderRadius: 2 }}>
                   <CardContent>
-                    {/* Thông tin đơn hàng */}
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                       <Typography variant="h6">
-                        Đặt bởi: {order.owner.username}
+                        Đặt bởi: {order.owner?.username || 'Ẩn danh'}
                       </Typography>
                       <Chip
                         label={`Tổng tiền: $${order.totalPrice}`}
@@ -65,9 +84,41 @@ const SellerOrders = () => {
                         variant="outlined"
                       />
                     </Box>
+
+                    {/* Trạng thái đơn hàng */}
+                    <Typography variant="body2" color="text.secondary" mb={2}>
+                      Trạng thái:{' '}
+                      <Chip
+                        label={order.trangThai}
+                        color={
+                          order.trangThai === 'Đã giao'
+                            ? 'success'
+                            : order.trangThai === 'Đã hủy'
+                            ? 'error'
+                            : order.trangThai === 'Đang giao hàng'
+                            ? 'warning'
+                            : 'default'
+                        }
+                      />
+                    </Typography>
+
+                    {/* Cập nhật trạng thái */}
+                    <FormControl fullWidth sx={{ mb: 2 }}>
+                      <InputLabel>Trạng thái đơn hàng</InputLabel>
+                      <Select
+                        value={order.trangThai}
+                        label="Trạng thái đơn hàng"
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                      >
+                        <MenuItem value="Chờ xử lý">Chờ xử lý</MenuItem>
+                        <MenuItem value="Đang giao hàng">Đang giao hàng</MenuItem>
+                        <MenuItem value="Đã giao">Đã giao</MenuItem>
+                        <MenuItem value="Đã hủy">Đã hủy</MenuItem>
+                      </Select>
+                    </FormControl>
+
                     <Divider sx={{ mb: 2 }} />
 
-                    {/* Danh sách sản phẩm */}
                     <Typography variant="subtitle1" color="textSecondary" mb={1}>
                       Sản Phẩm:
                     </Typography>
@@ -75,14 +126,12 @@ const SellerOrders = () => {
                       {order.products.map((p) => (
                         <Grid item xs={12} sm={6} md={4} key={p.product._id}>
                           <Card elevation={1} sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
-                            {/* Hình ảnh sản phẩm */}
                             <CardMedia
                               component="img"
                               sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 1 }}
                               image={p.product.image || 'https://via.placeholder.com/80'}
                               alt={p.product.title}
                             />
-                            {/* Thông tin sản phẩm */}
                             <Box sx={{ ml: 2, flex: 1 }}>
                               <Typography variant="body1" fontWeight="bold">
                                 {p.product.title}
@@ -102,7 +151,6 @@ const SellerOrders = () => {
                       ))}
                     </Grid>
 
-                    {/* Thời gian tạo đơn hàng */}
                     <Typography variant="body2" color="textSecondary" mt={2}>
                       Ngày đặt: {new Date(order.created).toLocaleDateString()}
                     </Typography>

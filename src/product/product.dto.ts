@@ -3,6 +3,7 @@ export interface CreateProductDTO {
   image: string;
   description: string;
   price: number;
+  
 }
 
 export type UpdateProductDTO = Partial<CreateProductDTO>;

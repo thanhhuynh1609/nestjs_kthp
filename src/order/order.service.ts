@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
 import { Order } from '../types/order';
-import { CreateOrderDTO } from './order.dto';
+import { CreateOrderDTO, UpdateOrderStatusDTO } from './order.dto';
 
 @Injectable()
 export class OrderService {
@@ -15,10 +14,11 @@ export class OrderService {
       .populate('owner')
       .populate('products.product');
 
-    if (!orders) {
-      throw new HttpException('No Orders Found', HttpStatus.NO_CONTENT);
-    }
-    return orders;
+    orders.forEach((order) => {
+      order.products = order.products.filter((p) => p.product != null);
+    });
+
+    return orders; // Trả về mảng, có thể rỗng
   }
 
   async createOrder(orderDTO: CreateOrderDTO, userId: string) {
@@ -31,11 +31,13 @@ export class OrderService {
       .findById(_id)
       .populate('products.product');
 
+    order.products = order.products.filter((p) => p.product != null);
+
     const totalPrice = order.products.reduce((acc, product) => {
       const price = product.product.price * product.quantity;
       return acc + price;
     }, 0);
-    await order.update({ totalPrice });
+    await order.updateOne({ totalPrice });
 
     order = await this.orderModel
       .findById(_id)
@@ -45,28 +47,34 @@ export class OrderService {
   }
 
   async listOrdersForSeller(sellerId: string) {
-    // Tìm tất cả đơn hàng có sản phẩm thuộc về người bán
     const orders = await this.orderModel
       .find()
       .populate('owner')
       .populate('products.product');
 
-    // Lọc các đơn hàng có sản phẩm thuộc về người bán
-    const sellerOrders = orders.filter((order) =>
-      order.products.some((item) => item.product.owner.toString() === sellerId),
-    );
+    const sellerOrders = orders
+      .map((order) => {
+        order.products = order.products.filter((p) => p.product != null);
+        return order;
+      })
+      .filter((order) =>
+        order.products.some((item) => item.product.owner.toString() === sellerId),
+      );
 
-    if (!sellerOrders || sellerOrders.length === 0) {
-      throw new HttpException('No Orders Found for Seller', HttpStatus.NO_CONTENT);
-    }
-
-    return sellerOrders;
+    return sellerOrders; // Trả về mảng, có thể rỗng
   }
 
   async listAllOrders() {
-    return await this.orderModel.find()
+    const orders = await this.orderModel
+      .find()
       .populate('owner')
       .populate('products.product');
+
+    orders.forEach((order) => {
+      order.products = order.products.filter((p) => p.product != null);
+    });
+
+    return orders; // Trả về mảng, có thể rỗng
   }
 
   async deleteByAdmin(id: string) {
@@ -74,6 +82,66 @@ export class OrderService {
     if (!order) {
       throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
     }
-    return order;
+    return order; 
   }
+
+  async updateOrderStatus(id: string, updateOrderStatusDTO: UpdateOrderStatusDTO) {
+    const order = await this.orderModel.findById(id);
+    if (!order) {
+      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    }
+    if (order.trangThai === 'Đã hủy' || order.trangThai === 'Đã giao') {
+      throw new HttpException(
+        'Cannot update status of a cancelled or delivered order',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    order.trangThai = updateOrderStatusDTO.trangThai;
+    await order.save();
+    return this.orderModel
+      .findById(id)
+      .populate('owner')
+      .populate('products.product');
+  }
+  async updateOrderStatusBySeller(
+    orderId: string,
+    sellerId: string,
+    updateOrderStatusDTO: UpdateOrderStatusDTO,
+  ) {
+    const order = await this.orderModel
+      .findById(orderId)
+      .populate('products.product');
+  
+    if (!order) {
+      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    }
+  
+    // Kiểm tra xem seller có sở hữu ít nhất một sản phẩm trong đơn hàng không
+    const ownsProduct = order.products.some(
+      (item) => item.product && item.product.owner.toString() === sellerId,
+    );
+  
+    if (!ownsProduct) {
+      throw new HttpException(
+        'Forbidden: You cannot update this order',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  
+    if (order.trangThai === 'Đã hủy' || order.trangThai === 'Đã giao') {
+      throw new HttpException(
+        'Cannot update status of a cancelled or delivered order',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  
+    order.trangThai = updateOrderStatusDTO.trangThai;
+    await order.save();
+  
+    return this.orderModel
+      .findById(orderId)
+      .populate('owner')
+      .populate('products.product');
+  }
+  
 }

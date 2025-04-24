@@ -9,6 +9,7 @@ import {
   Divider,
   Grid,
   Avatar,
+  Chip, // Thêm Chip để hiển thị trạng thái
 } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
@@ -76,6 +77,23 @@ const OrderList = () => {
             <Paper key={order._id} elevation={3} sx={{ p: 3, borderRadius: 2 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Tổng tiền: ${order.totalPrice}
+              </Typography>
+
+              {/* Thêm hiển thị trạng thái */}
+              <Typography variant="body2" color="text.secondary" mb={1}>
+                Trạng thái:{' '}
+                <Chip
+                  label={order.trangThai}
+                  color={
+                    order.trangThai === 'Đã giao'
+                      ? 'success'
+                      : order.trangThai === 'Đã hủy'
+                      ? 'error'
+                      : order.trangThai === 'Đang giao hàng'
+                      ? 'warning'
+                      : 'default'
+                  }
+                />
               </Typography>
 
               <Typography variant="subtitle1" fontWeight="medium">
