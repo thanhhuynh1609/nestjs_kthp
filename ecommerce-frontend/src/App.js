@@ -15,6 +15,7 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminUsers from './components/AdminUsers';
 import AdminOrders from './components/AdminOrders';
 import AdminProducts from './components/AdminProducts';
+import SearchResults from './components/SearchResults';
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </Router>

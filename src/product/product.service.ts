@@ -19,6 +19,19 @@ export class ProductService {
     return await this.productModel.find({ owner: objectId }).populate('owner');
   }
 
+  async searchByName(title: string): Promise<Product[]> {
+    try {
+      if (!title) {
+        return [];
+      }
+      return await this.productModel.find({
+        title: { $regex: title, $options: 'i' }
+      }).populate('owner');
+    } catch (error) {
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async findById(id: string): Promise<Product> {
     const product = await this.productModel.findById(id).populate('owner');
     if (!product) {

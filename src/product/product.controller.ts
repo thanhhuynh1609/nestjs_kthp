@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -24,6 +25,11 @@ export class ProductController {
   @Get()
   async listAll(): Promise<Product[]> {
     return await this.productService.findAll();
+  }
+
+  @Get('search')
+  async searchProducts(@Query('title') title: string) {
+    return this.productService.searchByName(title);
   }
 
   @Get('/mine')

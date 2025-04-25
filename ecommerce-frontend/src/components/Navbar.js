@@ -1,88 +1,150 @@
-import React, { useContext, useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
   IconButton,
+  TextField,
+  Box,
+  Tooltip,
+  Avatar,
   Menu,
   MenuItem,
-  Avatar,
-  Tooltip,
-  Box
+  InputAdornment
 } from '@mui/material';
-import {
-  Home as HomeIcon,
-  AdminPanelSettings as AdminIcon,
-  Inventory as ProductIcon,
-  ShoppingCart as OrderIcon,
-  AccountCircle,
-  Login,
-  AppRegistration,
-  Logout
-} from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import HomeIcon from '@mui/icons-material/Home';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Login from '@mui/icons-material/Login';
+import Logout from '@mui/icons-material/Logout';
+import AppRegistration from '@mui/icons-material/AppRegistration';
 import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
 
-  const handleLogout = () => {
-    handleCloseMenu();
-    logout();
-    navigate('/login');
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?name=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm('');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
   };
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
-  return (
-    <AppBar position="static" color="primary">
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 'bold', letterSpacing: 1.5 }}
-          component={Link}
-          to="/"
-          style={{ textDecoration: 'none', color: 'white' }}
-        >
-          TNBH_Store
-        </Typography>
+  const handleLogout = () => {
+    logout();
+    handleCloseMenu();
+    navigate('/');
+  };
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Tooltip title="Sản phẩm">
+  return (
+    <AppBar position="static">
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: 'none',
+              color: 'inherit',
+              marginRight: 2
+            }}
+          >
+            E-Commerce
+          </Typography>
+
+          <Tooltip title="Trang chủ">
             <IconButton color="inherit" component={Link} to="/">
               <HomeIcon />
             </IconButton>
           </Tooltip>
+        </Box>
 
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 1,
+          flex: 1,
+          justifyContent: 'center',
+          maxWidth: 500
+        }}>
+          <TextField
+            size="small"
+            placeholder="Tìm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
+            fullWidth
+            InputProps={{
+              sx: { 
+                bgcolor: 'background.paper',
+                borderRadius: 1,
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'transparent'
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'transparent'
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'transparent'
+                }
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon
+                    sx={{ cursor: 'pointer', color: 'text.secondary' }}
+                    onClick={handleSearch}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {user ? (
             <>
               {user.admin && (
                 <Tooltip title="Quản trị">
                   <IconButton color="inherit" component={Link} to="/admin">
-                    <AdminIcon />
+                    <AdminPanelSettingsIcon />
                   </IconButton>
                 </Tooltip>
               )}
 
               {user.seller && (
                 <>
-                  <Tooltip title="QL Sản phẩm">
+                  <Tooltip title="Quản lý sản phẩm">
                     <IconButton color="inherit" component={Link} to="/products/manage">
-                      <ProductIcon />
+                      <InventoryIcon />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Đơn đặt hàng">
                     <IconButton color="inherit" component={Link} to="/seller-orders">
-                      <OrderIcon />
+                      <ShoppingBasketIcon />
                     </IconButton>
                   </Tooltip>
                 </>
@@ -90,8 +152,8 @@ const Navbar = () => {
 
               <Tooltip title="Tài khoản">
                 <IconButton onClick={handleOpenMenu} color="inherit">
-                  <Avatar sx={{ width: 32, height: 32 }}>
-                    {user.name?.charAt(0).toUpperCase() || <AccountCircle />}
+                  <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                    {user.username?.charAt(0).toUpperCase() || <AccountCircle />}
                   </Avatar>
                 </IconButton>
               </Tooltip>
@@ -100,14 +162,16 @@ const Navbar = () => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenu}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                 <MenuItem onClick={handleCloseMenu} component={Link} to="/profile">
                   <AccountCircle sx={{ mr: 1 }} />
                   Hồ sơ
                 </MenuItem>
                 <MenuItem onClick={handleCloseMenu} component={Link} to="/orders">
-                  <OrderIcon sx={{ mr: 1 }} />
-                  Mua hàng
+                  <ShoppingBasketIcon sx={{ mr: 1 }} />
+                  Đơn hàng
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Logout sx={{ mr: 1 }} />
@@ -122,7 +186,7 @@ const Navbar = () => {
                   <Login />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Đăng kí">
+              <Tooltip title="Đăng ký">
                 <IconButton color="inherit" component={Link} to="/register">
                   <AppRegistration />
                 </IconButton>
