@@ -1,0 +1,85 @@
+ Chức năng của Người dùng:
+1.Quản lý tài khoản:
+// user.controller.ts
+@Get('me')                  // Xem thông tin cá nhân
+@Put()                      // Cập nhật thông tin cá nhân
+2.Xem và Tìm kiếm Sản phẩm:
+// product.controller.ts
+@Get()                      // Xem danh sách tất cả sản phẩm
+@Get('search')              // Tìm kiếm sản phẩm theo tên
+3.Quản lý Đơn hàng:
+// order.controller.ts
+@Get()                      // Xem danh sách đơn hàng của mình
+@Post()                     // Tạo đơn hàng mới
+// Tài khoản
+GET    /api/user/me         // Xem thông tin cá nhân
+PUT    /api/user           // Cập nhật thông tin cá nhân
+
+// Sản phẩm
+GET    /api/product        // Xem danh sách sản phẩm
+GET    /api/product/search // Tìm kiếm sản phẩm
+GET    /api/product/:id    // Xem chi tiết sản phẩm
+
+// Đơn hàng
+GET    /api/order         // Xem danh sách đơn hàng của mình
+POST   /api/order        // Tạo đơn hàng mới
+
+
+
+ Chức năng của Người bán (Seller):
+4.Quản lý Sản phẩm:
+ // product.controller.ts
+@Get('/mine')                // Xem danh sách sản phẩm của mình
+@Post()                      // Thêm sản phẩm mới
+@Put(':id')                  // Cập nhật sản phẩm
+@Delete(':id')               // Xóa sản phẩm
+5.Quản lý Đơn hàng:
+// order.controller.ts
+@Get('seller-orders')        // Xem danh sách đơn hàng của sản phẩm mình bán
+@Patch('seller-orders/:id/status')  // Cập nhật trạng thái đơn hàng
+Endpoints cho Seller:
+GET    /api/product/mine
+POST   /api/product
+PUT    /api/product/:id
+DELETE /api/product/:id
+GET    /api/order/seller-orders
+PATCH  /api/order/seller-orders/:id/status
+
+
+
+Chức năng của Quản trị viên (Admin):
+6.Quản lý Người dùng:
+// admin.controller.ts
+@Get('users')               // Xem danh sách tất cả người dùng
+@Delete('users/:id')        // Xóa người dùng
+7.Quản lý Sản phẩm:
+// admin.controller.ts
+@Get('products')            // Xem danh sách tất cả sản phẩm
+@Delete('products/:id')     // Xóa bất kỳ sản phẩm nào
+Quản lý Đơn hàng:
+// admin.controller.ts
+@Get('orders')             // Xem tất cả đơn hàng
+@Delete('orders/:id')      // Xóa đơn hàng
+
+
+
+
+Endpoints cho Admin:
+GET    /api/admin/users
+DELETE /api/admin/users/:id
+GET    /api/admin/products
+DELETE /api/admin/products/:id
+GET    /api/admin/orders
+DELETE /api/admin/orders/:id
+So sánh quyền hạn:
+Người bán (Seller):
+Chỉ quản lý sản phẩm của mình
+Chỉ xem và cập nhật đơn hàng liên quan đến sản phẩm của mình
+Không thể xóa tài khoản người dùng
+Không thể xem thông tin của người bán khác
+Quản trị viên (Admin):
+Quản lý toàn bộ người dùng
+Quản lý tất cả sản phẩm
+Quản lý tất cả đơn hàng
+Có quyền xóa bất kỳ dữ liệu nào
+
