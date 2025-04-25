@@ -12,7 +12,6 @@ import {
   Paper,
   Button,
   Avatar,
-  Stack,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
@@ -26,9 +25,12 @@ const AdminProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/admin/products', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          'http://localhost:8080/api/admin/products',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         setProducts(response.data);
       } catch (err) {
         setError('Không thể tải sản phẩm');
@@ -37,12 +39,15 @@ const AdminProducts = () => {
     fetchProducts();
   }, [token]);
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async productId => {
     try {
-      await axios.delete(`http://localhost:8080/api/admin/products/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setProducts(products.filter((product) => product._id !== productId));
+      await axios.delete(
+        `http://localhost:8080/api/admin/products/${productId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      setProducts(products.filter(product => product._id !== productId));
     } catch (err) {
       setError('Xóa sản phẩm thất bại');
     }
@@ -61,7 +66,10 @@ const AdminProducts = () => {
           </Typography>
         )}
 
-        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 2, boxShadow: 3 }}
+        >
           <Table>
             <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
               <TableRow>
@@ -73,7 +81,7 @@ const AdminProducts = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
+              {products.map(product => (
                 <TableRow key={product._id} hover>
                   <TableCell>
                     <Avatar
@@ -83,8 +91,12 @@ const AdminProducts = () => {
                     />
                   </TableCell>
                   <TableCell>{product.title}</TableCell>
-                  <TableCell>{product.price.toLocaleString('vi-VN')}₫</TableCell>
-                  <TableCell sx={{ maxWidth: 250 }}>{product.description}</TableCell>
+                  <TableCell>
+                    {product.price.toLocaleString('vi-VN')}₫
+                  </TableCell>
+                  <TableCell sx={{ maxWidth: 250 }}>
+                    {product.description}
+                  </TableCell>
                   <TableCell align="center">
                     <Button
                       variant="outlined"

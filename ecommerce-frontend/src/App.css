@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+/* Tùy chỉnh style cho tiêu đề banner */
+.carousel .legend {
+  background: rgba(218, 184, 184, 0); /* Nền mặc định đen trong suốt 50% */
+  color: rgba(221, 80, 80, 0); /* Chữ màu trắng */
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  border-radius: 5px; /* Bo góc */
+  font-size: 1.2rem; /* Kích thước chữ */
+  font-weight: bold; /* Chữ đậm */
+  bottom: 20px !important; /* Đặt vị trí phía dưới banner */
+  left: 50% !important; /* Căn giữa ngang */
+  transform: translateX(-50%); /* Căn giữa chính xác */
+  opacity: 0; /* Mặc định ẩn tiêu đề */
+  transition: opacity 0.3s ease, background 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+}
+
+/* Tiêu đề của các slide không được chọn (banner thứ hai, thứ ba,...) hiển thị mờ mờ */
+.carousel .slide:not(.selected) .legend {
+  opacity: 0.1; /* Hiển thị mờ mờ khi chưa rê chuột */
+}
+
+/* Khi rê chuột vào banner, hiển thị tiêu đề và làm nền đen xì */
+.carousel .slide:hover .legend {
+  opacity: 0.1; /* Giữ độ mờ như hiện tại */
+  background: rgba(229, 110, 110, 0.062); /* Nền đen xì khi rê chuột */
+}

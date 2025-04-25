@@ -32,8 +32,9 @@
     "@nestjs/platform-express": "^6.0.5",
     "bcryptjs": "^3.0.2",
     "dotenv": "^6.2.0",
-    "mongoose": "^5.4.20",
-    "passport": "^0.4.0",
+    "mongoose": "^8.13.3",
+    "nest-commerce": "file:",
+    "passport": "^0.7.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2"

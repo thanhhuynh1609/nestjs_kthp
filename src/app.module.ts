@@ -8,6 +8,7 @@ import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './shared/user.module';
 import { AdminModule } from './admin/admin.module';
+import { BannerModule } from './banner/banner.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AdminModule } from './admin/admin.module';
     OrderModule,
     UserModule,
     AdminModule,
+    BannerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

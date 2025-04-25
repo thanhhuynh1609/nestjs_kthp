@@ -1,4 +1,4 @@
-import React, { Profiler } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -15,6 +15,7 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminUsers from './components/AdminUsers';
 import AdminOrders from './components/AdminOrders';
 import AdminProducts from './components/AdminProducts';
+import AdminBanners from './components/AdminBanners'; // Thêm import
 import SearchResults from './components/SearchResults';
 
 const App = () => {
@@ -30,13 +31,14 @@ const App = () => {
           <Route path="/products/manage" element={<ProductManage />} />
           <Route path="/orders" element={<OrderList />} />
           <Route path="/orders/create" element={<OrderCreate />} />
-          <Route path="/seller-orders" element={<SellerOrders />} /> {/* Thêm route */}
-          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+          <Route path="/seller-orders" element={<SellerOrders />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/banners" element={<AdminBanners />} />{' '}
+          {/* Thêm route */}
           <Route path="/search" element={<SearchResults />} />
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>

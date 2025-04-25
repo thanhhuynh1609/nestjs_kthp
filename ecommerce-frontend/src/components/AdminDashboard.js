@@ -7,13 +7,14 @@ import {
   Grid,
   Card,
   CardContent,
-  CardActions
+  CardActions,
 } from '@mui/material';
 import {
   People as PeopleIcon,
   Inventory as InventoryIcon,
   ShoppingCart as ShoppingCartIcon,
-  Logout as LogoutIcon
+  Logout as LogoutIcon,
+  Image as ImageIcon, // Thêm icon cho banner
 } from '@mui/icons-material';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +44,11 @@ const AdminDashboard = () => {
       icon: <ShoppingCartIcon sx={{ fontSize: 50, color: 'warning.main' }} />,
       link: '/admin/orders',
     },
+    {
+      title: 'Quản lý Banner',
+      icon: <ImageIcon sx={{ fontSize: 50, color: 'info.main' }} />,
+      link: '/admin/banners',
+    },
   ];
 
   return (
@@ -66,7 +72,7 @@ const AdminDashboard = () => {
                   borderRadius: 3,
                   boxShadow: 3,
                   transition: '0.3s',
-                  '&:hover': { boxShadow: 6, transform: 'scale(1.03)' }
+                  '&:hover': { boxShadow: 6, transform: 'scale(1.03)' },
                 }}
               >
                 <CardContent>
